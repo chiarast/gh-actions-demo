@@ -23,13 +23,23 @@ jobs:
         uses: webfactory/ssh-agent@v0.4.1
         with:
             ssh-private-key: ${{ secrets.ORAVM }}
-      - name: create .ssh/known_hosts
-        run: |
-          ssh-keyscan -H -t rsa -v 130.61.117.43  >> ~/.ssh/known_hosts
-      - name: copy file to server
-        env:
-          myssshkey: ${{ secrets.ORAVM }}
-        run: |
-          echo "$mysshkey" > ~/.ssh/gh-key
-          chmod 600 ~/.ssh/gh-key
-          scp -i ~/.ssh/gh-key /home/runner/work/gh-actions-demo/gh-actions-demo/.mvn/wrapper/maven-wrapper.jar 130.61.117.43:/opt
+#      - name: create .ssh/known_hosts
+#        run: |
+#          ssh-keyscan -H -t rsa -v 130.61.117.43  >> ~/.ssh/known_hosts
+#      - name: copy file to server
+#        env:
+#          myssshkey: ${{ secrets.ORAVM }}
+#        run: |
+#          echo "$mysshkey" > ~/.ssh/gh-key
+#          chmod 600 ~/.ssh/gh-key
+#          scp -i ~/.ssh/gh-key /home/runner/work/gh-actions-demo/gh-actions-demo/.mvn/wrapper/maven-wrapper.jar 130.61.117.43:/opt
+
+      - name: Publish
+          uses: nogsantos/scp-deploy@master
+          with:
+            src: /home/runner/work/gh-actions-demo/gh-actions-demo/.mvn/wrapper/maven-wrapper.jar
+            host: 130.61.117.43
+            remote: /opt
+            port: 22
+            user: ubuntu
+            key: ${{ secrets.ORAVM }}
