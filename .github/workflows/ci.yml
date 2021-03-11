@@ -25,4 +25,11 @@ jobs:
             ssh-private-key: ${{ secrets.ORAVM }}
       - name: create .ssh/known_hosts
         run: |
-            ssh-keyscan -H -t rsa -v 130.61.117.43  >> ~/.ssh/known_hosts
+          ssh-keyscan -H -t rsa -v 130.61.117.43  >> ~/.ssh/known_hosts
+      - name: copy file to server
+        env:
+          myssshkey: ${{ secrets.ORAVM }}
+        run: |
+          echo "$mysshkey" > ~/.ssh/gh-key
+          chmod 600 ~/.ssh/gh-key
+          scp -i ~/.ssh/gh-key /home/runner/work/gh-actions-demo/gh-actions-demo/.mvn/wrapper/maven-wrapper.jar 130.61.117.43:/opt
